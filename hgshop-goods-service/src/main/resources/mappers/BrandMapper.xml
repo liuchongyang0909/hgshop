@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liuchongyang.hgshop.dao.BrandMapper">
+	<resultMap type="brand" id="brandMap">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="firstChar" column="first_char"/>
+		<result property="deletedFlag" column="deleted_flag"/>
+	</resultMap>
+
+	<select id="list" resultMap="brandMap">
+		select * from hg_brand
+		<where>
+			<if test="value!=null and value != ''">
+				and name like concat('%', #{value}, '%')
+			</if>
+		</where>
+	</select>
+	
+	<delete id="deleteBrand">
+		delete from hg_brand WHERE id = #{value}
+	</delete>
+	
+	<delete id="delBatchs">
+		delete from hg_brand WHERE id in
+    	<foreach collection="array" open="(" close=")" separator="," item="brandId">
+    		#{brandId}
+    	</foreach>
+	</delete>
+	
+	<insert id="addBrand">
+		INSERT INTO hg_brand(name,first_char) values(#{name},#{firstChar})
+	</insert>
+	
+	<select id="findById" resultMap="brandMap">
+		select * from hg_brand  WHERE id=#{value}
+	</select>
+	
+	<update id="updateBrand">
+		update hg_brand set name=#{name},first_char=#{firstChar}
+		where id=#{id}
+	</update>
+</mapper>
